@@ -1,0 +1,805 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
+
+/* Podstawowe stylowanie dla całej wtyczki */
+.qelner-menu {
+    font-family: 'Rubik', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.qelner-menu h2, .qelner-menu h3, .qelner-menu p, .qelner-menu button {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Styl dla przycisków kategorii */
+.category-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #0056b3;
+}
+
+/* Kontenery na dania i koszyk */
+#dishes-container, #koszyk-container, #total-price-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Styl dla pojedynczego dania */
+.danie {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+    width: calc(33.333% - 20px);
+    box-sizing: border-box;
+}
+
+.danie img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+/* Szczegóły dania */
+#dish-details-container, #propozycje-dan-container, #podzial-rachunku-dzielonego {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Domyślnie ukryty */
+}
+
+#dish-details-container img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+/* Styl dla przycisków akcji */
+.details-button, .usun-z-koszyka-button, #twoj-przycisk-dalej, #przejdz-do-rachunku, #na-jeden-rachunek, #rachunek-dzielony, #zapisz-wybor-rachunku, #dalej-rachunek-dzielony, #zloz-zamowienie {
+    width: 100%;
+    background-color: #0069d9;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.details-button:hover, .usun-z-koszyka-button:hover, #twoj-przycisk-dalej:hover, #przejdz-do-rachunku:hover, #na-jeden-rachunek:hover, #rachunek-dzielony:hover {
+    background-color: #218838;
+}
+
+/* Styl dla formularzy, inputów i selectów */
+.qelner-menu input[type="text"], .qelner-menu input[type="number"], .qelner-menu select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.qelner-menu input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Poprawa wyświetlania na urządzeniach mobilnych */
+@media screen and (max-width: 768px) {
+    .danie {
+        width: calc(50% - 20px); /* Na mniejszych ekranach pokazuje 2 dania w rzędzie */
+    }
+
+    #dish-details-container {
+        width: 90%; /* Więcej miejsca na mobilnych */
+    }
+}
+
+/* Styl dla kontenera na propozycje dań i rachunku */
+#propozycje-dan-container, #podzial-rachunku-dzielonego, .opcje-platnosci {
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.propozycja-dania {
+    display: inline-block;
+    width: calc(33.333% - 20px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    vertical-align: top;
+}
+
+@media screen and (max-width: 768px) {
+    .propozycja-dania {
+        width: calc(50% - 20px); /* Na urządzeniach mobilnych pokazuje 2 propozycje w rzędzie */
+    }
+}
+
+/* Styl dla przycisków do wyboru opcji płatności */
+.opcje-platnosci button {
+    width: calc(50% - 10px);
+    margin: 5px;
+    padding: 15px;
+    font-size: 16px;
+}
+
+/* Ukrywanie i pokazywanie kontenerów z propozycjami i formularzami */
+#propozycje-dan-container, #podzial-rachunku-dzielonego, .opcje-platnosci, #rachunek-indywidualny-container {
+    display: none; /* Domyślnie ukryte */
+}
+
+/* Szczegółowe style dla rachunku dzielonego i indywidualnego */
+.rachunek-dzielony-kontener, #rachunek-indywidualny-container {
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.rachunek-dzielony-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.rachunek-dzielony-header button {
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.rachunek-dzielony-pozycja {
+    margin-bottom: 15px;
+}
+
+.rachunek-dzielony-imie, .rachunek-dzielony-napiwek {
+    width: calc(50% - 10px);
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.rachunek-dzielony-metoda-platnosci {
+    width: calc(50% - 10px);
+    display: inline-block;
+}
+
+/* Stylowanie koszyka i przycisków akcji */
+#koszyk-container {
+    padding: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+.element-koszyka {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.element-koszyka:last-child {
+    border-bottom: none;
+}
+
+/* Styl dla informacji o łącznej cenie */
+#total-price-container {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+/* Styl dla przycisku do dalszych akcji */
+#twoj-przycisk-dalej, #przejdz-do-rachunku, .dodaj-do-koszyka-button {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Ukrywanie i pokazywanie przycisku "Przejdź do rachunku" */
+#przejdz-do-rachunku {
+    display: none; /* Domyślnie ukryty */
+}
+
+/* Dalsze doprecyzowanie stylów dla responsywności */
+@media screen and (max-width: 600px) {
+    .danie, .propozycja-dania {
+        width: 100%; /* Na bardzo małych ekranach pokazuje 1 danie na rzędzie */
+    }
+
+    .opcje-platnosci button, .rachunek-dzielony-imie, .rachunek-dzielony-napiwek, .rachunek-dzielony-metoda-platnosci {
+        width: 100%; /* Pełna szerokość na małych urządzeniach */
+        margin-bottom: 10px;
+    }
+}
+
+/* Stylowanie elementów dla szczegółów dania */
+#dish-details-container .skladnik {
+    margin: 5px 0;
+}
+
+#dish-details-container select, #dish-details-container input[type="checkbox"] {
+    margin-top: 5px;
+}
+
+/* Zamknięcie kontenera szczegółów */
+
+
+/* Dalsze dopracowanie wyglądu formularzy rachunku */
+.rachunek-dzielony-napiwek, .rachunek-dzielony-imie, .rachunek-dzielony-metoda-platnosci, #napiwek-indywidualny, #metoda-platnosci-indywidualna {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Animacja dla przycisków przy hover */
+.details-button:hover, .usun-z-koszyka-button:hover, #twoj-przycisk-dalej:hover, #przejdz-do-rachunku:hover, #na-jeden-rachunek:hover, #rachunek-dzielony:hover, .category-button:hover {
+    opacity: 0.8;
+}
+
+/* Poprawki dla modalnego okna szczegółów dania i propozycji */
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none; /* Domyślnie ukryty */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% od góry i wyśrodkowany */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Może być dostosowane */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Ostateczne dopasowania dla małych ekranów i poprawa czytelności */
+@media screen and (max-width: 480px) {
+    .modal-content {
+        width: 95%; /* Zwiększa szerokość na bardzo małych urządzeniach */
+        margin: 10% auto;
+    }
+
+    .danie, .propozycja-dania {
+        margin: 10px 0; /* Zwiększa odstępy dla lepszej czytelności */
+    }
+}
+
+/* Stylizacja dla pól do wprowadzania danych (input) przy aktywacji */
+.qelner-menu input[type="text"]:focus, 
+.qelner-menu input[type="number"]:focus, 
+.qelner-menu select:focus {
+    border-color: #4A90E2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Styl dla aktywnych przycisków kategorii dania */
+.category-button.active {
+    background-color: #0056b3;
+}
+
+/* Wizualne wyróżnienie dla przycisku aktualnie wybranej kategorii */
+.category-button.active {
+    background-color: #0069d9;
+    color: #ffffff;
+}
+
+/* Subtelne animacje dla przycisków */
+.category-button, 
+.details-button, 
+.usun-z-koszyka-button, 
+#twoj-przycisk-dalej, 
+#przejdz-do-rachunku, 
+#na-jeden-rachunek, 
+#rachunek-dzielony {
+    transition: all 0.3s ease;
+}
+
+/* Hover efekty dla wszystkich przycisków, dla lepszej responsywności */
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.2);
+}
+
+body, input, button, select, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rubik', sans-serif;
+}
+
+#dish-details-container, #propozycje-dan-container, #podzial-rachunku-dzielonego {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.danie img {
+    height: 300px; /* Zadana wysokość */
+    object-fit: cover; /* Zapewnia, że zdjęcie pokryje cały kontener bez deformacji */
+    width: 100%; /* Szerokość kontenera */
+}
+
+.details-button {
+    display: block; /* Zmienia domyślne ułożenie na blokowe, co spowoduje nową linię */
+    margin: 10px auto 0; /* Centralizuje przycisk */
+}
+
+#dishes-container img {
+    height: 300px; /* Wysokość każdego zdjęcia */
+    width: 100%; /* Szerokość zdjęcia dostosowuje się do kontenera */
+    object-fit: cover; /* Zapewnia, że zdjęcia będą pokrywać obszar bez utraty proporcji */
+    display: block; /* Zdjęcia będą wyświetlane jako bloki */
+    margin: 0 auto 10px; /* Wyśrodkowanie zdjęć z marginesem na dole */
+}
+
+#dishes-container img {
+    display: block;
+    margin: 20px auto 0; /* Zwiększony odstęp od góry */
+    border-radius: 10px 10px 0 0; /* Zaokrąglenie górnych rogów */
+    height: 300px; /* Ustalona wysokość */
+    object-fit: cover;
+}
+
+#dishes-container h3,
+#dishes-container p {
+    background-color: white; /* Białe tło dla tekstu */
+    margin: 0 auto; /* Wyśrodkowanie */
+    box-shadow: 0 8px 6px -6px gray; /* Cień dla tekstu */
+}
+
+#dishes-container .details-button {
+    display: block;
+    margin: 0 auto 20px; /* Zwiększony odstęp od dołu */
+    border-radius: 0 0 10px 10px; /* Zaokrąglenie dolnych rogów */
+    width: 100%; /* Ustalona szerokość */
+    box-shadow: 0 8px 6px -6px gray; /* Cień dla przycisku */
+}
+
+#dish-details-container .skladnik-container {
+    display: flex; /* Stosowanie flexboxa do kontenera zawierającego checkbox i etykietę */
+    justify-content: center; /* Wyśrodkowanie zawartości kontenera w poziomie */
+    align-items: center; /* Centrowanie elementów w pionie */
+    flex-wrap: wrap; /* Pozwala elementom zawijać się w nowej linii, jeśli nie ma wystarczająco miejsca */
+    gap: 10px; /* Ustawia odstępy pomiędzy elementami wewnątrz kontenera */
+    margin-bottom: 10px; /* Dodatkowy odstęp na dole dla całego kontenera */
+}
+
+#dish-details-container .skladnik-container label {
+    order: 2; /* Zapewnia, że etykieta będzie po prawej stronie checkboxa */
+}
+
+#dish-details-container .skladnik-container input[type="checkbox"] {
+    order: 1; /* Checkbox po lewej stronie */
+}
+
+#dalej-rachunek-dzielony {
+    background-color: #0069d9;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        font-family: 'Rubik', sans-serif;
+        align-items: center;
+    }
+    .danie {
+        width: calc(50% - 20px); /* Lepsze zarządzanie przestrzenią na tabletach */
+    }
+
+    #dish-details-container, #propozycje-dan-container, #podzial-rachunku-dzielonego {
+        width: 90%; /* Zwiększenie dostępnej przestrzeni na urządzeniach mobilnych */
+        padding: 10px; /* Zmniejszenie paddingu dla większej przestrzeni treści */
+        overflow-y: auto; /* Zapewnienie możliwości przewijania dla długich treści */
+        box-shadow: 0px 0px 30px 1000px rgba(0, 0, 0, 0.61);
+    }
+
+    /* Dodatkowe dostosowania dla bardzo małych ekranów */
+    @media screen and (max-width: 480px) {
+        .danie, .propozycja-dania {
+            width: 100%; /* Pełna szerokość na bardzo małych urządzeniach dla lepszego wyświetlania */
+        }
+        
+        .category-button, .details-button, .usun-z-koszyka-button, #twoj-przycisk-dalej, #przejdz-do-rachunku, #na-jeden-rachunek, #rachunek-dzielony {
+            width: 90%; /* Dostosowanie szerokości przycisków dla lepszego dopasowania */
+            margin: 10px auto; /* Wyśrodkowanie przycisków z dodatkowym odstępem */
+        }
+    }
+}
+
+/* Udoskonalenie wyświetlania checkboxów i etykiet */
+#dish-details-container .skladnik-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#dish-details-container .skladnik-container input[type="checkbox"] {
+    flex-shrink: 0; /* Zapobiega zmianie rozmiaru checkboxa */
+}
+
+#dish-details-container .skladnik-container label {
+    text-align: left;
+    flex-grow: 1; /* Etykieta zajmuje dostępną przestrzeń, tekst wyrównany do lewej */
+}
+
+#przejdz-do-rachunku {
+    display: block !important; /* Zmusza wyświetlanie przycisku */
+    position: relative; /* Zapewnia właściwe pozycjonowanie */
+    z-index: 1010; /* Zapewnia, że przycisk jest nad innymi elementami */
+}
+
+.opcje-platnosci {
+    display: flex; /* Używamy Flexbox'a, aby wyśrodkować przyciski i zapewnić elastyczne rozmieszczanie */
+    justify-content: center; /* Wyśrodkowanie przycisków w poziomie */
+    align-items: center; /* Centrowanie przycisków w pionie */
+    gap: 20px; /* Ustawia odstępy pomiędzy przyciskami */
+    padding: 20px; /* Dodaje padding wewnątrz kontenera dla lepszego wyglądu */
+    margin-top: 20px; /* Zapewnia odstęp od poprzedzających elementów */
+    background-color: #f8f9fa; /* Tło dla kontenera */
+    border-radius: 5px; /* Zaokrąglenie rogów kontenera */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtelny cień dla kontenera */
+}
+
+.opcje-platnosci button {
+    padding: 10px 20px; /* Ustawia padding przycisków */
+    font-size: 16px; /* Ustawia rozmiar czcionki dla tekstów na przyciskach */
+    color: white; /* Kolor tekstu na przyciskach */
+    background-color: #007bff; /* Kolor tła przycisków */
+    border: none; /* Usuwa ramkę przycisków */
+    border-radius: 5px; /* Zaokrągla rogi przycisków */
+    cursor: pointer; /* Ustawia kursor wskazujący na przyciski */
+    transition: background-color 0.3s ease; /* Animacja zmiany koloru tła przycisków */
+}
+
+.opcje-platnosci button:hover {
+    background-color: #0056b3; /* Zmienia kolor tła przycisków przy najechaniu */
+}
+
+#przycisk-koszyk {
+    width: 100%;
+    height: 3em;
+    align-items: center;
+    font-size: 2em;
+    background-color: #007bff;
+    color: white;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+}
+/* Stylowanie inputu ilości w koszyku */
+#koszyk-container .ilosc-produktu {
+    width: 20%; /* Ustawia szerokość na 20% kontenera */
+    display: inline-block; /* Pozwala elementowi na bycie częścią linii, umożliwiając wyświetlanie obok innych elementów */
+    margin-right: 10px; /* Dodaje odstęp z prawej strony inputu */
+}
+
+/* Stylowanie selectów w szczegółach dania */
+#dish-details-container select {
+    width: calc(25% - 10px); /* Ustawia szerokość na 25% minus odstęp, aby zmieściły się 4 obok siebie */
+    display: inline-block; /* Pozwala elementowi na bycie częścią linii */
+    margin-right: 10px; /* Dodaje odstęp z prawej strony selecta */
+}
+
+/* Ostatniemu selectowi usuwamy margines z prawej, aby idealnie wpasował się w dostępną przestrzeń */
+#dish-details-container select:last-of-type {
+    margin-right: 0;
+}
+
+/* Responsywność - zmiana układu na pionowy na mniejszych ekranach */
+@media screen and (max-width: 768px) {
+
+    
+    #dish-details-container select {
+    width: 100%; /* Ustawia szerokość na 25% minus odstęp, aby zmieściły się 4 obok siebie */
+    display: block;
+}
+
+#dish-details-container {
+    padding-left:2em;
+    padding-right:2em;
+}
+
+    
+    .category-button {
+        width:100%;
+    }
+
+
+.qelner-menu input[type="text"], .qelner-menu input[type="number"], .qelner-menu select {
+    width: 40%;
+    padding: 10px;
+    margin: 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+    
+}
+
+#wybor-platnosci-do-dania {
+    width:100%;
+}
+
+
+
+
+
+
+
+/* PANEL KELNERA */
+
+/* Styl ogólny kontenera */
+#qelner-kelner-panel {
+    font-family: 'Rubik', sans-serif;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    max-width: 90%;
+}
+
+/* Styl grup stolików */
+.grupa-stolik {
+    background-color: #ffffff;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.grupa-stolik h2 {
+    background-color: #0069d9;
+    color: #ffffff;
+    padding: 10px 15px;
+    margin: 0;
+    border-radius: 6px 6px 0 0;
+    font-size: 20px;
+}
+
+/* Styl grup klientów */
+.grupa-klienta {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.grupa-klienta:last-child {
+    border-bottom: none;
+}
+
+.grupa-klienta h3 {
+    margin: 0 0 15px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Styl poszczególnych zamówień */
+.zamowienie {
+    background-color: #fafafa;
+    font-size: 1em;
+    border: 1px solid #eaeaea;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-sizing: border-box; /* Dodane dla lepszego zarządzania szerokością */
+}
+
+/* Zaktualizowany styl paragrafu w zamówieniu dla mniejszych odstępów */
+.zamowienie p {
+    margin: 2px 0; /* Zmniejszone odstępy */
+    line-height: 1em;; /* Lepsza czytelność */
+}
+
+.zamowienie p b {
+    font-weight: 600;
+}
+
+.zamowienie:last-child {
+    margin-bottom: 0;
+}
+
+
+
+
+/* Interaktywność dla grup stolików i klientów */
+.grupa-stolik:hover, .grupa-klienta:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+/* Styl dla szczegółów zamówień, takich jak składniki do dodania/usunięcia */
+.zamowienie p {
+    color: #333;
+}
+
+.zamowienie p b {
+
+}
+
+/* Przyciski i linki akcji */
+.zamowienie .akcje {
+    margin-top: 10px;
+}
+
+.akcje a {
+    display: inline-block;
+    background-color: #0069d9;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.akcje a:hover {
+    background-color: #0069d9;
+    transition: background-color 0.3s ease;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    #qelner-kelner-panel {
+        margin: 10px;
+    }
+
+    .grupa-stolik h2, .grupa-klienta h3 {
+        font-size: 16px;
+    }
+}
+
+/* Animacje ładowania dla kontenera zamówień */
+#qelner-kelner-panel::before {
+    content: '';
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+}
+
+/* Stylizacja nagłówków dla lepszej czytelności */
+.grupa-stolik h2, .grupa-klienta h3 {
+    letter-spacing: 0.5px;
+}
+
+/* Drobne dostosowania do paddingów i marginów dla lepszej przestrzeni */
+.zamowienie p {
+    padding: 2px 0;
+}
+
+/* Styl dla informacji o składnikach - kontrast i widoczność */
+.zamowienie .skladniki {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Dostosowanie przycisków do akcji specyficznych dla kelnera */
+.akcje .potwierdz, .akcje .anuluj {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Wiadomość o braku zamówień */
+
+
+/* Dodatkowa responsywność i poprawki dla małych ekranów */
+@media (max-width: 480px) {
+    .grupa-stolik, .grupa-klienta {
+        padding: 10px;
+    }
+
+    .grupa-stolik h2, .grupa-klienta h3 {
+        font-size: 15px;
+    }
+
+    .zamowienie p {
+        font-size: 14px;
+    }
+
+    .akcje a {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+}
+
+
+@media (min-width: 992px) {
+    .zamowienie {
+        float: left;
+        width: calc(25% - 20px); /* 4 w jednym rzędzie, z odstępami */
+        margin-right: 20px;
+        margin-bottom: 20px;
+    }
+
+    .zamowienie:nth-child(4n) {
+        margin-right: 0; /* Usunięcie marginesu dla każdego czwartego elementu */
+    }
+}
+
+grupa-klienta::after, .grupa-stolik::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Dodatkowa responsywność i poprawki */
+@media (max-width: 991px) and (min-width: 768px) {
+    .zamowienie {
+        width: calc(50% - 10px); /* 2 w jednym rzędzie na tabletach */
+        margin-right: 20px;
+        margin-bottom: 20px;
+    }
+
+    .zamowienie:nth-child(2n) {
+        margin-right: 0; /* Usunięcie marginesu dla każdego drugiego elementu */
+    }
+}
+
+@media (max-width: 767px) {
+    .zamowienie {
+        width: 100%; /* 1 w rzędzie na urządzeniach mobilnych */
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
